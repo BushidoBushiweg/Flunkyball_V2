@@ -1,12 +1,53 @@
-<!-- /views/players/index.ejs -->
-
 <%
-var content = `
-<div class="container">
-  <h1>Players</h1>
-  <!-- Hier kommt Ihr Inhalt -->
-</div>
+var formContent = `
+  <form action="/players/new" method="post">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" class="form-control" id="name" name="name" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Neuen Spieler hinzufügen</button>
+  </form>
 `;
+
+var content = loggedin ? formContent : '';
+
+if(players) {
+  content += `
+<div class="row">
+  <div class="col-12">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <!-- Fügen Sie hier weitere Spaltenüberschriften hinzu -->
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>`;
+  
+  players.forEach(player => {
+    content += `
+        <tr>
+          <td>${player.name}</td>
+          <!-- Fügen Sie hier weitere Spielerinformationen hinzu -->`;
+    if (loggedin) {
+      content += `
+          <td>
+            <form action="/players/delete/${player._id}" method="post" onsubmit="return confirm('Sind Sie sicher, dass Sie diesen Spieler löschen möchten?');">
+              <button type="submit" class="btn btn-danger btn-sm">Löschen</button>
+            </form>
+          </td>`;
+    }
+    content += `</tr>`;
+  });
+
+  content += `
+      </tbody>
+    </table>
+  </div>
+</div>`;
+}
+
 %>
 
 <%- include('../layout', { title: 'Players', body: content }) %>

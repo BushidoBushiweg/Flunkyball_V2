@@ -1,15 +1,12 @@
-// models/Player.js
-
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const PlayerSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true
-  },
-  // Add other player properties here
+const PlayerSchema = new Schema({
+  // Hier definieren Sie die Felder für Ihr Schema
+  name: String,
+  // Weitere Felder nach Bedarf hinzufügen...
 });
 
-const Player = mongoose.model('Player', PlayerSchema);
+const Players = mongoose.model('Player', PlayerSchema);
 
-module.exports = Player;
+module.exports = Players;
