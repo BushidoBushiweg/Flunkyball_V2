@@ -1,0 +1,71 @@
+<!-- /views/layout.ejs -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-icons.min.css">
+    <script src="/js/bootstrap.bundle.min.js"></script>
+  </head>
+  <body>
+    <div class="container-fluid overflow-hidden">
+      <div class="row vh-100 overflow-auto">
+        <div class="col-12 col-sm-3 col-xl-2 px-sm-2 px-0 bg-dark d-flex sticky-top">
+          <!-- Sidebar -->
+          <div class="d-flex flex-sm-column flex-row flex-grow-1 align-items-center align-items-sm-start px-3 pt-2 text-white">
+            <a href="/" class="d-flex align-items-center pb-sm-3 mb-md-0 me-md-auto text-white text-decoration-none">
+              <span class="fs-5">F<span class="d-none d-sm-inline">lunkyball Tunier</span></span>
+            </a>
+            <ul class="nav nav-pills flex-sm-column flex-row flex-nowrap flex-shrink-1 flex-sm-grow-0 flex-grow-1 mb-sm-auto mb-0 justify-content-center align-items-center align-items-sm-start" id="menu">
+              <li class="nav-item">
+                <a href="/matches" class="nav-link px-sm-0 px-2">
+                  <i class="fs-5 bi-grid"></i><span class="ms-1 d-none d-sm-inline">Matches</span>
+                </a>
+              </li>
+              <li>
+                <a href="/players" class="nav-link px-sm-0 px-2">
+                  <i class="fs-5 bi-people"></i><span class="ms-1 d-none d-sm-inline">Players</span>
+                </a>
+              </li>
+              <li>
+                <a href="/rankings" class="nav-link px-sm-0 px-2">
+                  <i class="fs-5 bi-list-ol"></i><span class="ms-1 d-none d-sm-inline">Rankings</span>
+                </a>
+              </li>
+            </ul>
+            <div class="dropdown py-sm-4 mt-sm-auto ms-auto ms-sm-0 flex-shrink-1">
+              <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="d-none d-sm-inline mx-1"><% if (loggedin) { %><%= username %><% } else { %>Adminpanel<% } %></span>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                <% if (loggedin) { %>
+                  <li>
+                    <form action="/logout" method="post">
+                      <button type="submit" class="dropdown-item">Abmelden</button>
+                    </form>
+                  </li>
+                <% } else { %>
+                  <li><a class="dropdown-item" href="/login">Anmelden</a></li>
+                <% } %>
+              </ul>
+            </div>
+            <!-- Hier können Sie den Rest der Sidebar hinzufügen -->
+          </div>
+        </div>
+        <div class="col d-flex flex-column h-100">
+          <main class="row overflow-auto">
+            <div class="col pt-4">
+              <!-- Hier kommt der spezifische Inhalt für jede Seite -->
+              <%- body %>
+            </div>
+          </main>
+          <footer class="row bg-light py-4 mt-auto">
+            <!-- Footer -->
+            <div class="col"> Footer content here... </div>
+          </footer>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
