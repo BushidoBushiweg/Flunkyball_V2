@@ -4,9 +4,56 @@
 var content = `
 <div class="container">
   <h1>Matches</h1>
-  <!-- Hier kommt Ihr Inhalt -->
+`;
+
+if(loggedin) {
+  content += `
+  <form action="/matches/start" method="post">
+    <button type="submit" class="btn btn-primary">Match starten</button>
+  </form>
+  `;
+}
+
+content += `
+  <!-- Hier kommen die Teams -->
+  <div class="row">
+    <div class="col-5">
+      <h2>Team 1</h2>
+      <ul>
+      `;
+
+if(team1) { 
+  team1.forEach(player => { 
+    content += `<li>${player.name}</li>`;
+  });
+}
+
+content += `
+      </ul>
+    </div>
+    
+    <div class="col-2 text-center">
+      <h2>VS</h2>
+    </div>
+    
+    <div class="col-5">
+      <h2>Team 2</h2>
+      <ul>
+      `;
+
+if(team2) { 
+  team2.forEach(player => { 
+    content += `<li>${player.name}</li>`;
+  });
+}
+
+content += `
+      </ul>
+    </div>
+  </div>
 </div>
 `;
+
 %>
 
 <%- include('../layout', { title: 'Matches', body: content }) %>

@@ -1,29 +1,36 @@
-<!-- /views/rankings/index.ejs -->
-
-<% var content = ''; %>
-
-<% if(players) { %>
 <%
+var content = '';
+if(players) {
   content += `
 <div class="row">
   <div class="col-12">
     <table class="table table-striped">
       <thead>
         <tr>
+          <th>Rang</th>
           <th>Name</th>
           <th>Erstelldatum</th>
           <th>Status</th>
+          <th>Matches gespielt</th>
+          <th>Matches gewonnen</th>
+          <th>Matches verloren</th>
+          <th>Buchholz-Zahl</th>
         </tr>
       </thead>
       <tbody>`;
   
-  players.forEach(player => {
-    const createdAt = new Date(player.createdAt).toLocaleString();
+  players.forEach((player, index) => {
+    const createdDate = new Date(player.createdAt).toLocaleString();
     content += `
         <tr>
+          <td>${index + 1}</td>
           <td>${player.name}</td>
-          <td>${createdAt}</td>
+          <td>${createdDate}</td>
           <td>${player.status}</td>
+          <td>${player.matchesPlayed}</td>
+          <td>${player.matchesWon}</td>
+          <td>${player.matchesLost}</td>
+          <td>${player.buchholzScore}</td>
         </tr>`;
   });
 
@@ -33,6 +40,7 @@
   </div>
 </div>`;
 }
+
 %>
 
 <%- include('../layout', { title: 'Rankings', body: content }) %>
