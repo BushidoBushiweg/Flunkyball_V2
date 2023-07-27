@@ -25,6 +25,20 @@ router.post('/new', async (req, res) => {
   }
 });
 
+router.post('/status/:id', async (req, res) => {
+  try {
+    if (!req.session.loggedin) {
+      res.redirect('/login');
+      return;
+    }
+    await Players.findByIdAndUpdate(req.params.id, { status: req.body.status });
+    res.redirect('/players');
+  } catch (err) {
+    console.error(err);
+    res.redirect('/players');
+  }
+});
+
 router.post('/delete/:id', async (req, res) => {
   try {
     if (!req.session.loggedin) {

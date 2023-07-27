@@ -1,12 +1,38 @@
 <!-- /views/rankings/index.ejs -->
 
+<% var content = ''; %>
+
+<% if(players) { %>
 <%
-var content = `
-<div class="container">
-  <h1>Rankings</h1>
-  <!-- Hier kommt Ihr Inhalt -->
-</div>
-`;
+  content += `
+<div class="row">
+  <div class="col-12">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Erstelldatum</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>`;
+  
+  players.forEach(player => {
+    const createdAt = new Date(player.createdAt).toLocaleString();
+    content += `
+        <tr>
+          <td>${player.name}</td>
+          <td>${createdAt}</td>
+          <td>${player.status}</td>
+        </tr>`;
+  });
+
+  content += `
+      </tbody>
+    </table>
+  </div>
+</div>`;
+}
 %>
 
 <%- include('../layout', { title: 'Rankings', body: content }) %>

@@ -1,3 +1,5 @@
+<!-- /views/players/index.ejs -->
+
 <%
 var formContent = `
   <form action="/players/new" method="post">
@@ -10,7 +12,6 @@ var formContent = `
 `;
 
 var content = loggedin ? formContent : '';
-
 if(players) {
   content += `
 <div class="row">
@@ -19,24 +20,37 @@ if(players) {
       <thead>
         <tr>
           <th>Name</th>
-          <!-- Fügen Sie hier weitere Spaltenüberschriften hinzu -->
+          <th>Erstelldatum</th>
+          <th>Status</th>
           <th></th>
         </tr>
       </thead>
       <tbody>`;
   
   players.forEach(player => {
+    const createdAt = new Date(player.createdAt).toLocaleString();
     content += `
         <tr>
           <td>${player.name}</td>
-          <!-- Fügen Sie hier weitere Spielerinformationen hinzu -->`;
+          <td>${createdAt}</td>`;
     if (loggedin) {
       content += `
+          <td>
+            <form action="/players/status/${player._id}" method="post">
+              <select name="status">
+                <option value="Active" ${player.status === "Active" ? 'selected' : ''}>Aktiv</option>
+                <option value="Inactive" ${player.status === "Inactive" ? 'selected' : ''}>Inaktiv</option>
+              </select>
+              <button type="submit" class="btn btn-primary btn-sm">Status ändern</button>
+            </form>
+          </td>
           <td>
             <form action="/players/delete/${player._id}" method="post" onsubmit="return confirm('Sind Sie sicher, dass Sie diesen Spieler löschen möchten?');">
               <button type="submit" class="btn btn-danger btn-sm">Löschen</button>
             </form>
           </td>`;
+    } else {
+      content += `<td>${player.status}</td><td></td>`;
     }
     content += `</tr>`;
   });
