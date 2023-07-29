@@ -30,8 +30,15 @@ const PlayerSchema = new mongoose.Schema({
   buchholzScore: {
     type: Number,
     default: 0
+  },
+  // Add field to store the ID of the last match the player has played
+  lastMatch: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Match',
+    default: null
   }
 });
+
 
 const Players = mongoose.model('Player', PlayerSchema);
 

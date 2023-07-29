@@ -6,7 +6,7 @@ var content = `
   <h1>Matches</h1>
 `;
 
-if(loggedin) {
+if(loggedin && !match) {
   content += `
   <form action="/matches/start" method="post">
     <button type="submit" class="btn btn-primary">Match starten</button>
@@ -17,43 +17,98 @@ if(loggedin) {
 content += `
   <!-- Hier kommen die Teams -->
   <div class="row">
-    <div class="col-5">
-      <h2>Team 1</h2>
-      <ul>
-      `;
+    <div class="col-lg-5">
+      <div id="team1-card" class="card">
+        <div class="card-header">
+          <h2>Team 1</h2>
+        </div>
+        <ul class="list-group list-group-flush">
+        `;
 
-if(team1) { 
-  team1.forEach(player => { 
-    content += `<li>${player.name}</li>`;
+if(match && match.team1) { 
+  match.team1.forEach(player => { 
+    content += `<li class="list-group-item">${player.name}</li>`;
   });
 }
 
 content += `
-      </ul>
+        </ul>
+      </div>
     </div>
     
-    <div class="col-2 text-center">
+    <div class="col-lg-2 d-flex align-items-center justify-content-center">
       <h2>VS</h2>
     </div>
     
-    <div class="col-5">
-      <h2>Team 2</h2>
-      <ul>
-      `;
+    <div class="col-lg-5">
+      <div id="team2-card" class="card">
+        <div class="card-header">
+          <h2>Team 2</h2>
+        </div>
+        <ul class="list-group list-group-flush">
+        `;
 
-if(team2) { 
-  team2.forEach(player => { 
-    content += `<li>${player.name}</li>`;
+if(match && match.team2) { 
+  match.team2.forEach(player => { 
+    content += `<li class="list-group-item">${player.name}</li>`;
   });
 }
 
 content += `
-      </ul>
+        </ul>
+      </div>
     </div>
   </div>
-</div>
-`;
+  `;
+
+if(match && loggedin) {
+  content += `
+  <form id="winner-form" action="/matches/winner" method="post">
+    <input id="winner-input" type="hidden" name="winner">
+    <button type="submit" class="btn btn-primary mt-3">Gewinner einreichen</button>
+  </form>
+  `;
+
+  if(allPlayersHavePlayed) {
+    content += `
+    <p>Vorrunde Beendet</p>
+    `;
+  }
+}
+
+if(loggedin) {
+  content += `
+  <form action="/matches/reset" method="post">
+    <button type="submit" class="btn btn-danger mt-3">Spieler-Statistiken zurücksetzen</button>
+  </form>
+  `;
+}
+
+content += `</div>`;
 
 %>
 
 <%- include('../layout', { title: 'Matches', body: content }) %>
+
+<% if (loggedin) { %>
+<script>
+document.getElementById("team1-card").addEventListener("click", function() {
+  document.getElementById("team1-card").classList.add("bg-success");
+  document.getElementById("team2-card").classList.remove("bg-success");
+  document.getElementById("winner-input").value = "team1";
+});
+
+document.getElementById("team2-card").addEventListener("click", function() {
+  document.getElementById("team2-card").classList.add("bg-success");
+  document.getElementById("team1-card").classList.remove("bg-success");
+  document.getElementById("winner-input").value = "team2";
+});
+
+document.getElementById("winner-form").addEventListener("submit", function(e) {
+  if (!document.getElementById("winner-input").value) {
+    e.preventDefault();
+    alert("Bitte wählen Sie ein Gewinnerteam aus!");
+  }
+});
+</script>
+<% } %>
