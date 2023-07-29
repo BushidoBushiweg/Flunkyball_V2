@@ -36,24 +36,19 @@ router.post('/start', async (req, res) => {
     const minMatchesPlayed = await Players.find().sort({ matchesPlayed: 1 }).limit(1).then(players => players[0].matchesPlayed);
 
     // Get all players who have played the minimum number of matches
-    const playersWithMinMatches = await Players.find({ matchesPlayed: minMatchesPlayed });
+    const playersWithMinMatches = await Players.find({ matchesPlayed: minMatchesPlayed }).sort({ buchholzScore: -1 });
 
-    // Randomly shuffle the players
-    const shuffledPlayers = playersWithMinMatches.sort(() => 0.5 - Math.random());
+    // Divide the players into two halves
+    const topHalf = playersWithMinMatches.slice(0, playersWithMinMatches.length / 2);
+    const bottomHalf = playersWithMinMatches.slice(playersWithMinMatches.length / 2);
 
-    // Select the first 6 players for the match
-    let selectedPlayers = shuffledPlayers.slice(0, 6);
+    // Randomly shuffle both halves
+    const shuffledTopHalf = topHalf.sort(() => 0.5 - Math.random());
+    const shuffledBottomHalf = bottomHalf.sort(() => 0.5 - Math.random());
 
-    // If not enough players were selected, select random players to fill the teams
-    if (selectedPlayers.length < 6) {
-      const additionalPlayersNeeded = 6 - selectedPlayers.length;
-      const remainingPlayers = await Players.find({ _id: { $nin: selectedPlayers.map(player => player._id) } });
-      const additionalPlayers = remainingPlayers.sort(() => 0.5 - Math.random()).slice(0, additionalPlayersNeeded);
-      selectedPlayers = selectedPlayers.concat(additionalPlayers);
-    }
-
-    const team1 = selectedPlayers.slice(0, 3);
-    const team2 = selectedPlayers.slice(3, 6);
+    // Select players from both halves to form the teams
+    const team1 = shuffledTopHalf.slice(0, 2).concat(shuffledBottomHalf.slice(0, 1));
+    const team2 = shuffledTopHalf.slice(2, 4).concat(shuffledBottomHalf.slice(1, 2));
 
     const newMatch = new Match({
       team1: team1.map(player => player._id),
